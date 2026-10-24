@@ -1,0 +1,100 @@
+Level 1: Basic SQL queries
+
+1. Display all employee details.
+ANS : select * from emp;
+
+2. Display employee names and salaries.
+ANS:  select ename, sal
+      from emp;
+
+3. Find employees whose salary is greater than 3000.
+ANS: 
+ SELECT ENAME
+ FROM EMP
+ WHERE SAL = 3000;
+
+4. Display employees who work in department 10.
+ANS:
+ 	SELECT ENAME
+	FROM EMP
+	WHERE DEPTNO = 10;
+
+5. Find employees whose names start with 'S'.
+ANS:
+	SELECT ENAME 
+	FROM EMP
+	WHERE ENAME LIKE 'S%';
+
+6. Display employees in descending order of salary.
+ANS:
+	SELECT ENAME
+	FROM EMP
+	ORDER BY SAL DESC;
+
+7. Find employees whose salary is between 2000 and 5000.
+ANS:
+	SELECT ENAME
+	FROM EMP
+	WHERE SAL BETWEEN 2000 AND 5000;
+
+8. Display employees who receive commission (COMM is not NULL).
+ANS:    SELECT ENAME 
+ 	FROM EMP
+ 	WHERE COMM IS NOT NULL;
+
+Level 2: Aggregate functions and GROUP BY
+
+1. Find the highest salary in the company
+ANS:
+	SELECT MAX(SAL)
+ 	FROM EMP;
+
+2. Find the second-highest salary.
+ANS:
+	SELECT MAX(SAL)
+ 	FROM EMP
+ 	WHERE SAL < (SELECT MAX(SAL)
+              	      FROM EMP);
+OR
+
+SELECT SAL
+FROM (SELECT EMP.*,DENSE_RANK()OVER (ORDER BY SAL DESC)
+      RANK
+      FROM EMP)
+WHERE RANK IN (2);
+
+3. Count the total number of employees.
+ANS:
+	SELECT COUNT(*)
+	FROM EMP;
+	
+4. Find the average salary of employees.
+ANS:
+	SELECT AVG(SAL)
+	FROM EMP;
+
+5. Display department-wise employee counts.
+ANS:
+	SELECT COUNT(*),DEPTNO
+	FROM EMP
+	GROUP BY DEPTNO;
+
+6. Find departments having more than 3 employees.
+ANS:
+	SELECT DEPTNO
+	FROM EMP
+	GROUP BY DEPTNO
+	HAVING COUNT(*)>3;
+
+7. Display job-wise maximum salary.
+ANS:
+	SELECT MAX(SAL) , JOB
+	FROM EMP
+	GROUP BY JOB;
+
+8. Find jobs in which more than 2 employees work.
+ANS:
+	SELECT JOB
+ 	FROM EMP
+ 	GROUP BY JOB
+ 	HAVING COUNT(*)>2;
