@@ -98,3 +98,147 @@ ANS:
  	FROM EMP
  	GROUP BY JOB
  	HAVING COUNT(*)>2;
+
+Level 3: JOIN queries
+
+1. Display employee names with their department names.
+ANS:
+	SELECT ENAME,DNAME
+	FROM EMP INNER JOIN DEPT
+	ON EMP.DEPTNO = DEPT.DEPTNO;
+
+2. Display employees working in the Research department.
+ANS:
+	SELECT ENAME
+ 	FROM EMP INNER JOIN DEPT
+ 	ON EMP.DEPTNO = DEPT.DEPTNO
+ 	WHERE DNAME = 'RESEARCH';
+
+3. Display departments that have no employees.
+ANS:
+	
+	SELECT DNAME
+ 	FROM EMP RIGHT JOIN DEPT
+ 	ON EMP.DEPTNO = DEPT.DEPTNO
+ 	WHERE EMP.DEPTNO IS NULL;
+
+4. Display employee names with their manager names (self join).
+ANS:
+	SELECT E1.ENAME,E2.ENAME
+ 	FROM EMP E1 JOIN EMP E2
+ 	ON E1.MGR = E2.EMPNO;
+
+5. Count employees in each department and display department names.
+ANS:
+	SELECT COUNT(*),DNAME
+	FROM EMP INNER JOIN DEPT
+	ON EMP.DEPTNO = DEPT.DEPTNO
+	GROUP BY DNAME;
+
+6. Display employees who do not belong to any matching department.
+ANS:
+	SELECT ENAME
+	FROM EMP LEFT JOIN DEPT
+	ON EMP.DEPTNO = DEPT.DEPTNO
+	WHERE DEPT.DEPTNO IS NULL;
+
+Level 4: Subqueries — interview favorites
+
+1. Find employees earning more than the average salary.
+ANS:
+	SELECT ENAME
+	FROM EMP
+	WHERE SAL > (SELECT AVG(SAL)
+                     FROM EMP);
+
+2. Find employees earning the highest salary in each department.
+ANS:
+	SELECT ENAME
+	FROM EMP
+	WHERE SAL IN (SELECT MAX(SAL)
+           		FROM EMP
+           		GROUP BY DEPTNO);
+
+3. Find employees earning more than ALL employees in department 10.
+ANS:
+	SELECT ENAME
+ 	FROM EMP
+ 	WHERE SAL > ALL(SELECT SAL
+                 FROM EMP
+                 WHERE DEPTNO = 10);
+
+4. Find employees earning more than ANY employee in department 10.
+ANS:
+	SELECT ENAME
+	FROM EMP
+	WHERE SAL >ANY(SELECT SAL
+               		FROM EMP
+               		WHERE DEPTNO = 10);
+
+5. Find the second-highest salary using a subquery.
+ANS:
+	SELECT MAX(SAL)
+	FROM EMP
+	WHERE SAL < (SELECT MAX(SAL)
+             		FROM EMP);
+OR
+	SELECT SAL
+	FROM (SELECT EMP.*,DENSE_RANK()OVER(ORDER BY SAL DESC)RANK
+		FROM EMP)
+	WHERE RANK IN 2;
+
+6. Find employees who earn more than their own department's average salary.
+ANS:
+	SELECT ENAME
+	FROM EMP E
+	WHERE SAL > (SELECT AVG(SAL)
+             		FROM EMP
+             		WHERE DEPTNO = E.DEPTNO);
+
+7. Find the employee(s) who earn the third-highest distinct salary.
+ANS:
+	SELECT ENAME
+	FROM EMP
+	WHERE SAL IN (SELECT MAX(DISTINCT SAL)
+              		FROM EMP
+              		WHERE SAL < (SELECT MAX(DISTINCT SAL)
+                           		FROM EMP
+                           		WHERE SAL <(SELECT MAX(DISTINCT SAL)
+                                       			FROM EMP)));
+
+8. Find employees who earn more than their manager.
+ANS:
+	SELECT E1.ENAME
+	FROM EMP E1 JOIN EMP E2
+	ON E1.MGR = E2.EMPNO
+	WHERE E1.SAL > E2.SAL;
+
+9. Find the department with the highest average salary.
+ANS:
+	SELECT DNAME,AVG(SAL)
+	FROM EMP
+	INNER JOIN DEPT
+	ON EMP.DEPTNO = DEPT.DEPTNO
+	GROUP BY DNAME
+	HAVING AVG(SAL)IN (SELECT MAX(AVG_SAL)
+                 FROM (SELECT AVG(SAL) AVG_SAL
+                   FROM EMP
+                   GROUP BY DEPTNO));
+
+10. display employees who earn the same salary as another employee.
+ANS:
+	 SELECT DISTINCT E1.ENAME
+ 	FROM EMP E1 JOIN EMP E2
+ 	ON E1.SAL = E2.SAL
+ 	WHERE E1.EMPNO != E2.EMPNO;
+
+11. Find employees who earn the second-highest salary in each department.
+ANS:
+	 SELECT ENAME
+ 	FROM EMP E1
+ 	WHERE SAL IN (SELECT SAL
+              		FROM (SELECT EMP.*,DENSE_RANK()OVER (ORDER BY SAL DESC)RANK
+                       		FROM EMP)
+              		WHERE RANK IN 2
+              		AND DEPTNO = E1.DEPTNO);
+	
