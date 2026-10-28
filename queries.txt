@@ -241,4 +241,39 @@ ANS:
                        		FROM EMP)
               		WHERE RANK IN 2
               		AND DEPTNO = E1.DEPTNO);
+
+12. WAQTD EMP name and department name and location for employees whose name start with 'A'.
+ANS:
+	SELECT ENAME,DNAME,LOC
+ 	FROM EMP INNER JOIN DEPT
+ 	ON EMP.DEPTNO = DEPT.DEPTNO
+ 	WHERE SUBSTR(ENAME,1,1) = 'A'
+
+13.WAQTD EMP name and department name ,manager name and his location where the second character of the emp name and 2nd character of manager name should be same(without using like operator).
+ANS:
+	SELECT E1.ENAME,D1.DNAME,E2.ENAME,D2.LOC
+	FROM EMP E1 JOIN EMP E2
+	ON E1.MGR = E2.EMPNO JOIN DEPT D1 ON E1.DEPTNO = D1.DEPTNO JOIN DEPT D2 ON E2.DEPTNO = D2.DEPTNO
+	WHERE SUBSTR(E1.ENAME,2,1) = SUBSTR(E2.ENAME,2,1);
+
+14.WAQTD EMP name, sal and deptno where the emp is earning more than the avg sal of their department and loc contains only 5 character.
+ANS:
+	SELECT ENAME ,SAL,EMP.DEPTNO
+ 	FROM EMP INNER JOIN DEPT
+ 	ON EMP.DEPTNO = DEPT.DEPTNO
+ 	WHERE LENGTH(LOC) = 5 AND SAL IN (SELECT AVG(E.SAL)
+                            			FROM EMP E
+                            			WHERE E.DEPTNO = EMP.DEPTNO);
+
+15. WAQTD dname and location  where the maximum employees  are their the particular dept
+ANS:
+	SELECT DEPT.DNAME,DEPT.LOC
+	FROM DEPT INNER JOIN EMP
+	ON DEPT.DEPTNO = EMP.DEPTNO
+	GROUP BY DEPT.DEPTNO ,DEPT.DNAME,DEPT.LOC
+	HAVING COUNT(*) IN (SELECT MAX(COUNT)
+                    		FROM (SELECT COUNT(*) COUNT
+                           	FROM EMP
+                           	GROUP BY DEPTNO));
+	
 	
