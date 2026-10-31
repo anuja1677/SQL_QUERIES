@@ -275,5 +275,154 @@ ANS:
                     		FROM (SELECT COUNT(*) COUNT
                            	FROM EMP
                            	GROUP BY DEPTNO));
+
+16. WAQTD department name and location where the minimum number of employees work.
+ANS:
+	SELECT DNAME,LOC
+	FROM DEPT INNER JOIN EMP
+	ON DEPT.DEPTNO = EMP.DEPTNO
+	GROUP BY DEPT.DEPTNO,DEPT.DNAME,DEPT.LOC
+	HAVING COUNT(*) IN (SELECT MIN(COUNT)
+                    		FROM (SELECT COUNT(*) COUNT
+                          		FROM EMP
+                   			GROUP BY DEPTNO));
+
+17. WAQTD employee name, salary and department number of employees who earn more than the highest-paid employee in department 20.
+ANS:
+	SELECT ENAME,SAL,DEPTNO
+	FROM EMP
+	WHERE SAL >(SELECT MAX(SAL)
+            		FROM EMP
+            		WHERE DEPTNO =20);
+
+18. WAQTD department name and location of departments where no employees work.
+ANS:
+	SELECT DNAME,LOC
+	FROM DEPT
+	WHERE NOT EXISTS (SELECT DEPTNO
+                  		FROM EMP
+                  		WHERE EMP.DEPTNO = DEPT.DEPTNO);
 	
+	
+19. WAQTD department number where the maximum number of employees earn the same salary.
+ANS:
+	SELECT DEPTNO
+ 	FROM EMP
+ 	GROUP BY DEPTNO,SAL
+ 	HAVING COUNT(*) = (SELECT MAX(CNT)
+                    		FROM (SELECT COUNT(*) CNT
+                           		FROM EMP
+                            		GROUP BY DEPTNO,SAL));
+
+20. Find the department-wise total salary of employees.
+ANS:
+	select sum(sal),deptno
+	from emp
+	group by deptno;
+
+21. Display departments having more than 3 employees.
+ANS:
+	SELECT DEPTNO
+ 	FROM EMP
+ 	GROUP BY DEPTNO
+ 	HAVING COUNT(*) > 3;
+
+22. Find the job-wise maximum salary.
+ANS:
+	SELECT MAX(SAL),JOB
+	FROM EMP
+	GROUP BY JOB;
+
+23. Display departments where the average salary is greater than 2000.
+ANS:
+	SELECT DEPTNO
+	FROM EMP
+	GROUP BY DEPTNO
+	HAVING AVG(SAL) > 2000;	
+
+23. Find the number of employees working in each job. Display only jobs having more than 2 employees.
+ANS:
+	SELECT COUNT(*),JOB
+	FROM EMP
+	GROUP BY JOB
+	HAVING COUNT(*) > 2;
+
+23. Find the department having the highest total salary.
+ANS:
+	SELECT DEPTNO,SUM(SAL)
+	FROM EMP
+	GROUP BY DEPTNO
+	HAVING SUM(SAL) = (SELECT MAX(TOTAL_SAL)
+	FROM (SELECT SUM(SAL) TOTAL_SAL
+	FROM EMP
+	GROUP BY DEPTNO));
+
+24. Display jobs where the minimum salary is greater than 1000.
+ANS:
+	SELECT JOB
+	FROM EMP
+	GROUP BY JOB 
+	HAVING MIN(SAL) > 1000;
+
+25. Find departments having more than 2 employees whose salary is greater than 1500.
+ANS:
+	SELECT DEPTNO
+	FROM EMP
+	WHERE SAL >1500
+	GROUP BY DEPTNO
+	HAVING COUNT(*) >2;
+
+26. Display departments where the total salary is greater than 5000.
+ANS:
+	SELECT DEPTNO
+	FROM EMP
+	GROUP BY DEPTNO
+	HAVING SUM(SAL) > 5000;
+
+27. Find jobs where the difference between maximum salary and minimum salary is greater than 2000.
+ANS:
+	SELECT JOB
+	FROM EMP
+	GROUP BY JOB
+	HAVING MAX(SAL) - MIN(SAL) > 2000;
+
+28. Find the department with the second-highest total salary.
+ANS:
+	SELECT DEPTNO,SUM(SAL)
+	FROM EMP
+	GROUP BY DEPTNO
+	HAVING SUM(SAL) = (SELECT MAX(TOTAL_SAL)
+                   	FROM (SELECT SUM(SAL) TOTAL_SAL
+				FROM EMP
+				GROUP BY DEPTNO)
+			WHERE TOTAL_SAL < (SELECT MAX(TOTAL_SAL)
+						FROM (SELECT SUM(SAL) TOTAL_SAL
+							FROM EMP
+						GROUP BY DEPTNO)));
+
+29. Find the job having the highest average salary.
+ANS:
+	SELECT JOB
+	FROM EMP
+	GROUP BY JOB 
+	HAVING AVG(SAL) = (SELECT MAX(AVG_SAL)
+                   		FROM (SELECT AVG(SAL) AVG_SAL
+                          		FROM EMP
+                           		GROUP BY JOB));
+
+30. Display departments where the number of employees is equal to 5.
+ANS:
+	SELECT DEPTNO
+	FROM EMP
+	GROUP BY DEPTNO
+	HAVING COUNT(*) = 5;
+
+31. Find departments where the average salary is greater than the average salary of all employees.
+ANS:
+	SELECT DEPTNO
+	FROM EMP
+	GROUP BY DEPTNO
+	HAVING AVG(SAL) > (SELECT AVG(SAL)
+                  		FROM EMP);
+
 	
