@@ -425,4 +425,82 @@ ANS:
 	HAVING AVG(SAL) > (SELECT AVG(SAL)
                   		FROM EMP);
 
+32. Display all the employees whose department names ending with 's'.
+Ans:
+	SELECT * 
+	FROM EMP
+	WHERE DEPTNO IN (SELECT DEPTNO 
+			FROM DEPT
+			WHERE DNAME LIKE '%S');
+
+33. WAQTD the employees names who is having maximum sal in dept name 'Accounting'.
+ANS:
+	SELECT ENAME
+	FROM EMP
+	WHERE SAL IN (SELECT MAX(SAL)
+ 			FROM EMP
+			WHERE DEPTNO IN (SELECT DEPTNO
+					FROM DEPT
+					WHERE DNAME = 'ACCOUNTING'));
+
+34. WAQTD dept name who is having highest commission.
+ANS :
+	SELECT DNAME 
+	FROM DEPT
+	WHERE DEPTNO IN (SELECT DEPTNO
+			FROM EMP
+			WHERE COMM = (SELECT MAX(COMM)
+					FROM EMP
+					WHERE COMM IS NOT NULL));
 	
+
+35. WAQTD employee names whose dept name has 2nd character as 'O'.
+ANS:
+	 SELECT ENAME 
+ 	FROM EMP
+ 	WHERE DEPTNO IN (SELECT DEPTNO
+ 			FROM DEPT
+ 			WHERE DNAME LIKE '_O%');
+
+		OR
+	SELECT ENAME
+	FROM EMP
+	WHERE DEPTNO IN (SELECT DEPTNO
+			FROM DEPT
+			WHERE SUBSTR(DNAME,2) = 'O');
+
+36. WAQTD all the employees who's dept number same as 'Scott'.
+ANS:
+	 SELECT *
+ 	FROM EMP
+ 	WHERE DEPTNO IN (SELECT DEPTNO
+ 			FROM EMP
+ 			WHERE ENAME = 'SCOTT');	
+
+37. WAQTD all the employees in operation and Accounting dept.
+ANS:
+	SELECT *
+	FROM EMP
+	WHERE DEPTNO IN (SELECT DEPTNO
+			FROM DEPT
+			WHERE DNAME IN ('OPERATION','ACCOUNTING'));
+
+38. List the employees who has salary is greater than miller.
+ANS:
+	SELECT *
+ 	FROM EMP
+ 	WHERE SAL > (SELECT SAL 
+ 			FROM EMP
+ 			WHERE ENAME = 'MILLER');
+
+39. List dept name having atleast 3 salesman.
+ANS:
+	SELECT DNAME
+	FROM DEPT
+	WHERE DEPTNO IN (SELECT DEPTNO
+                	FROM EMP
+			WHERE JOB = (SELECT JOB
+					FROM EMP
+					WHERE JOB = 'SALESMAN'
+					GROUP BY JOB
+					HAVING COUNT(*) >= 3));
