@@ -674,6 +674,69 @@ ANS:
 			WHERE JOB = 'SALESMAN' AND MGR IN (SELECT EMPNO
 								FROM EMP
 								WHERE JOB = 'MANAGER'));
-	
+
+57. Display employee names in uppercase.
+ANS:
+	SELECT UPPER(ENAME)
+	FROM EMP;
+
+58. Display employee names in lowercase.
+ANS:
+	SELECT LOWER(ENAME)
+	FROM EMP;
+
+60. Display employee names with the first letter capitalized.
+ANS:
+	SELECT INITCAP(ENAME)
+	FROM EMP;
+
+61. Display employee names along with the length of each name.
+ANS:
+	SELECT ENAME , LENGTH(ENAME)
+ 	FROM EMP;
+
+62. Display employees whose name contains exactly 5 characters.
+ANS:
+	SELECT ENAME
+	FROM EMP
+	WHERE LENGTH(ENAME) = 5;
+
+63. Display employee names and concatenate 'EMP_' before each employee name.
+ANS:
+	SELECT CONCAT('EMP_',ENAME)
+	FROM EMP;
+
+64. Display employee names and their job roles in a single column.
+ANS:
+	SELECT CONCAT(ENAME,JOB)
+	FROM EMP;
+
+65. Display employees whose names start with the letter 'A'.
+ANS:
+	SELECT ENAME
+ 	FROM EMP
+ 	WHERE SUBSTR(ENAME,1,1) = 'A';
+
+66. Display the first three characters of every employee name.
+ANS:
+	SELECT SUBSTR(ENAME,1,3)
+	FROM EMP;
+
+67.Display the last two characters of every employee name.
+ANS:
+	SELECT SUBSTR(ENAME,-2,2)
+	FROM EMP;
+
+68. Display employee names starting from the second character.	
+ANS:
+	select substr(ename,2)
+ 	from emp;
+
+69. Display the position of character 'A' in each employee name.
+ANS:
+	SELECT INSTR(ENAME,'A',1)
+	FROM EMP
+
+70. Display employees whose names contain the character 'L'.
 	
 	
