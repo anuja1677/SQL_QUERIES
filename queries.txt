@@ -738,5 +738,244 @@ ANS:
 	FROM EMP
 
 70. Display employees whose names contain the character 'L'.
-	
-	
+ANS:
+	SELECT ENAME
+	FROM EMP
+	WHERE INSTR(ENAME,'L') >0;
+
+71. Display the remainder when employee salary is divided by 1000.	
+ANS:
+	SELECT MOD(SAL, 1000)
+	FROM EMP;
+
+72. Display employee salary rounded to the nearest hundred.
+ANS:
+	SELECT ROUND(SAL,-2)
+	FROM EMP;
+
+73. Display employee salary rounded to two decimal places.
+ANS:
+	SELECT ROUND(SAL,2)
+ 	FROM EMP;
+
+74. Display employee salary truncated to one decimal place.
+ANS:	
+	SELECT TRUNC(SAL,1)
+	FROM EMP;
+
+75. Display the first three characters of employee names and their positions of 'S'.
+ANS:
+	SELECT SUBSTR(ENAME,1,3),INSTR(ENAME,'S',1,1)
+	FROM EMP;
+
+76. Display the last date of the month for every employee's hire date.
+ANS:
+	SELECT LAST_DAY(HIREDATE)
+	FROM EMP;
+
+77. Display the number of months between employee hire date and today's date.
+ANS:
+	SELECT MONTHS_BETWEEN(HIREDATE,SYSDATE)
+ 	FROM EMP;
+
+78. Display employee names and their commission. If commission is NULL, display 0.
+ANS:
+	SELECT ENAME,NVL(COMM,0)
+	FROM EMP;
+
+79. Display employees whose commission is NULL using NVL.
+ANS:
+	SELECT *
+	FROM EMP
+	WHERE NVL(COMM,0)=0;
+
+80. Display employee annual salary including commission. Consider NULL commission as 0.
+ANS:
+	SELECT SAL*12+NVL(COMM,0)
+	FROM EMP;
+
+81. Display employee names and the last day of their joining month.
+ANS:
+	SELECT ENAME,LAST_DAY(HIREDATE)
+	FROM EMP;
+
+82. WAQTD DNAME of employees whose ENAME starts with a vowel, without using the LIKE operator.
+ANS:
+	SELECT DNAME
+	FROM DEPT
+	WHERE DEPTNO IN (SELECT DEPTNO
+			FROM EMP
+			WHERE (SUBSTR(ENAME,1,1) = 'A' OR SUBSTR(ENAME,1,1) = 'E' OR SUBSTR(ENAME,1,1) = 'I' OR SUBSTR(ENAME,1,1)='O' OR			SUBSTR(ENAME,1,1)='U'));
+
+83. WAQTD ENAME and DNAME of employees whose name length is greater than 5.
+ANS:
+	SELECT ENAME,DNAME
+	FROM EMP INNER JOIN DEPT
+	ON EMP.DEPTNO = DEPT.DEPTNO
+	WHERE LENGTH(ENAME) > 5;
+
+84. WAQTD ENAME, DNAME and SAL of employees whose salary is divisible by 5.
+ANS:
+	SELECT ENAME,DNAME,SAL
+	FROM EMP INNER JOIN DEPT
+	ON EMP.DEPTNO = DEPT.DEPTNO
+	WHERE MOD(SAL,5) = 0;
+
+85. WAQTD DNAME of employees who were hired in the month of December.
+ANS:
+	SELECT DNAME
+	FROM DEPT
+	WHERE DEPTNO IN (SELECT DEPTNO
+			FROM EMP
+			WHERE TO_CHAR(HIREDATE,'MON') = 'DEC');
+
+86. WAQTD ENAME and DNAME of employees whose hire date is between 1981 and 1982.
+ANS:
+	SELECT ENAME,DNAME
+	FROM EMP INNER JOIN DEPT
+	ON EMP.DEPTNO = DEPT.DEPTNO
+	WHERE EMP.HIREDATE BETWEEN '01-JAN-1981' AND '31-DEC-1982';
+
+87. WAQTD ENAME and DNAME where the first three characters of ENAME and DNAME are the same.
+ANS:
+	SELECT ENAME,DNAME
+	FROM EMP INNER JOIN DEPT
+	ON EMP.DEPTNO = DEPT.DEPTNO
+	WHERE SUBSTR(ENAME,1,3) = SUBSTR(DNAME,1,3);
+
+88. WAQTD ENAME and DNAME of employees whose salary is greater than 2000 and whose department location is not NEW YORK.
+ANS:
+	SELECT ENAME,DNAME
+	FROM EMP INNER JOIN DEPT
+	ON EMP.DEPTNO = DEPT.DEPTNO
+	WHERE SAL > 2000 AND LOC <> 'NEW YORK';	
+
+89. WAQTD ENAME, DNAME and HIREDATE of employees hired on Monday.
+ANS:
+	SELECT ENAME,DNAME,HIREDATE
+	FROM EMP INNER JOIN DEPT
+	ON EMP.DEPTNO = DEPT.DEPTNO
+	WHERE TRIM(TO_CHAR(HIREDATE,'DAY')) = 'MONDAY';
+
+90. WAQTD ENAME and DNAME where the last character of ENAME is the same as the first character of DNAME.
+ANS:
+	SELECT ENAME,DNAME
+	FROM EMP INNER JOIN DEPT
+	ON EMP.DEPTNO = DEPT.DEPTNO
+	WHERE SUBSTR(ENAME,-1,1) = SUBSTR(DNAME,1,1);
+
+91. WAQTD ENAME, DNAME and SAL of employees whose salary is between 1000 and 3000 and whose ENAME contains the letter A.
+ANS:
+	SELECT ENAME,DNAME,SAL
+	FROM EMP INNER JOIN DEPT
+	ON EMP.DEPTNO = DEPT.DEPTNO
+	WHERE SAL BETWEEN 1000 AND 3000 AND INSTR(ENAME,'A',1)>0;
+
+92. WAQTD total salary department-wise
+ANS:
+	SELECT SUM(SAL),DEPTNO
+	FROM EMP
+	GROUP BY DEPTNO;
+
+93. WAQTD number of employees working in each department
+ANS:
+	SELECT COUNT(*),DEPTNO
+	FROM EMP
+	GROUP BY DEPTNO;
+
+94. WAQTD department number and average salary of each department where average salary is greater than 2000.
+ANS:
+	SELECT DEPTNO,AVG(SAL)
+	FROM EMP
+	GROUP BY DEPTNO
+	HAVING AVG(SAL) > 2000;
+
+95. WAQTD JOB and total salary of employees working in each job where total salary is greater than 5000.
+ANS:
+	SELECT JOB, SUM(SAL)
+	FROM EMP
+	GROUP BY JOB
+	HAVING SUM(SAL) > 5000;
+
+96. WAQTD department name and maximum salary in each department.
+ANS:
+	SELECT DNAME,MAX(SAL)
+	FROM DEPT INNER JOIN EMP
+	ON DEPT.DEPTNO = EMP.DEPTNO
+	GROUP BY DNAME;
+
+97.  WAQTD department number where more than 3 employees are working.
+ANS:
+	SELECT DEPTNO
+	FROM EMP
+	GROUP BY DEPTNO
+	HAVING COUNT(*) > 3;
+
+98. WAQTD JOB and number of employees working in each job, but display only jobs having more than 2 employees.
+ANS:
+	SELECT JOB,COUNT(*)
+	FROM EMP
+	GROUP BY JOB
+	HAVING COUNT(*) > 2;
+
+99. WAQTD department name where the total salary of employees is greater than the salary of MILLER.
+ANS:
+	SELECT DNAME
+ 	FROM DEPT
+ 	WHERE DEPTNO IN (SELECT DEPTNO
+ 			FROM EMP
+ 			GROUP BY DEPTNO
+ 			HAVING SUM(SAL) > (SELECT SAL
+ 						FROM EMP
+ 						WHERE ENAME = 'MILLER'));
+
+100. WAQTD department number and minimum salary of each department, excluding departments whose minimum salary is less than 1000.
+ANS:
+	SELECT DEPTNO,MIN(SAL)
+	FROM EMP
+	GROUP BY DEPTNO
+	HAVING MIN(SAL) > 1000;
+
+101. WAQTD JOB and average salary of employees hired after 1981, displaying only jobs whose average salary is greater than 1500.
+ANS:
+	SELECT JOB,AVG(SAL)
+	FROM EMP
+	WHERE HIREDATE > '31-DEC-1981'
+	GROUP BY JOB
+	HAVING AVG(SAL) > 1500;
+
+102. WAQTD ENAME of employees who are earning more than the salary of MILLER.
+ANS:
+	SELECT ENAME
+	FROM EMP
+	WHERE SAL > (SELECT SAL
+			FROM EMP
+			WHERE ENAME = 'MILLER');
+
+103. WAQTD ENAME and SAL of employees who are earning the second-highest salary.
+ANS:
+	SELECT ENAME,SAL
+	FROM EMP
+	WHERE SAL IN (SELECT MAX(SAL)
+			FROM EMP
+			WHERE SAL < (SELECT MAX(SAL)
+					FROM EMP));
+
+104. WAQTD DNAME of employees who are working in the department where SMITH is working.
+ANS:
+	SELECT DNAME
+	FROM DEPT
+	WHERE DEPTNO IN (SELECT DEPTNO
+			FROM EMP
+			WHERE DEPTNO IN (SELECT DEPTNO 
+						FROM EMP 
+						WHERE ENAME = 'SMITH'));
+
+105. WAQTD ENAME of employees who are earning more than the average salary of all employees.
+ANS:
+	SELECT ENAME
+	FROM EMP
+	WHERE SAL > (SELECT AVG(SAL)
+			FROM EMP);
+
+ 
