@@ -1124,3 +1124,67 @@ ANS:
 	WHERE TO_CHAR(HIREDATE,'MON') = 'DEC'
 	GROUP BY DNAME
 	HAVING COUNT(*) > 1;
+
+125. WAQTD ENAME, DNAME and SAL of employees who are earning the maximum salary in their respective departments.
+ANS:
+	SELECT ENAME,DNAME,SAL
+ 	FROM EMP INNER JOIN DEPT
+ 	ON EMP.DEPTNO = DEPT.DEPTNO
+ 	WHERE SAL IN (SELECT MAX(SAL)
+ 			FROM EMP E
+ 			WHERE E.DEPTNO = EMP.DEPTNO);
+
+126. WAQTD department name where the number of employees is greater than the number of employees working in department 10.
+ANS:
+	SELECT DNAME
+	FROM DEPT INNER JOIN EMP
+	ON DEPT.DEPTNO = EMP.DEPTNO
+	GROUP BY DNAME
+	HAVING COUNT(*) > (SELECT COUNT(*)
+				FROM EMP
+				WHERE DEPTNO = 10);
+
+127. WAQTD ENAME, DNAME and SAL of employees whose salary is greater than the average salary of their respective departments.
+ANS:
+	SELECT ENAME,DNAME,SAL
+	FROM EMP INNER JOIN DEPT
+	ON EMP.DEPTNO = DEPT.DEPTNO
+	WHERE SAL > ALL(SELECT AVG(SAL)
+			FROM EMP E
+			WHERE E.DEPTNO = EMP.DEPTNO);
+
+128. WAQTD JOB and total salary where employees are hired on the 23rd day of a month, grouped job-wise, and total salary is greater than MILLER's salary.
+ANS:
+	SELECT JOB,SUM(SAL)
+	FROM EMP 
+	WHERE TO_CHAR(HIREDATE,'DD') = '23'
+	GROUP BY JOB
+	HAVING SUM(SAL) > (SELECT SAL
+				FROM EMP
+				WHERE ENAME = 'MILLER');
+
+129. WAQTD ENAME, DNAME, MANAGER NAME and MANAGER'S LOCATION where the manager's salary is greater than 2500.
+ANS:
+	SELECT E1.ENAME,D1.DNAME,E2.ENAME,D2.LOC
+	FROM EMP E1 JOIN EMP E2
+	ON E1.MGR = E2.EMPNO
+	INNER JOIN DEPT D1 ON D1.DEPTNO = E1.DEPTNO
+	INNER JOIN DEPT D2 ON D2.DEPTNO = E2.DEPTNO
+	WHERE E2.SAL > 2500;
+
+130. WAQTD department name and highest salary in each department, but display only departments whose highest salary is greater than the highest salary of department 20.
+ANS:
+	SELECT DNAME,MAX(SAL)
+	FROM EMP INNER JOIN DEPT
+	ON EMP.DEPTNO = DEPT.DEPTNO
+	GROUP BY DNAME
+	HAVING MAX(SAL) > (SELECT MAX(SAL)
+				FROM EMP
+				WHERE DEPTNO = 20);
+
+131. WAQTD ENAME and SAL of employees who are earning the second-highest salary in their respective departments.
+ANS:
+	SELECT ENAME,SAL
+	FROM (SELECT ENAME,SAL,DENSE_RANK()OVER (ORDER BY SAL DESC)RANK
+		FROM EMP)
+	WHERE RANK = 2
