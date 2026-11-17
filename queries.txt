@@ -1222,4 +1222,95 @@ ANS:
 	WHERE DEPTNO IN (SELECT DEPTNO
 				FROM EMP
 				WHERE SAL < (SELECT MAX(SAL)
-						FROM EMP) AND SAL < 3000)
+						FROM EMP) AND SAL < 3000);
+
+136. WAQTD 1st, 2nd, 5th and 6th records of employees.
+ANS:
+	SELECT *
+	FROM (SELECT EMP.*,ROWNUM SNO
+		FROM EMP)
+	WHERE SNO IN (1,2,5,6);
+
+137. WAQTD first 5 records of EMP table.
+ANS:
+	SELECT *
+	FROM (SELECT EMP.*,ROWNUM SNO
+		FROM EMP)
+	WHERE SNO IN (1,2,3,4,5);
+
+138. WAQTD last 2 records of EMP table.
+ANS:
+	SELECT *
+	FROM (SELECT EMP.*,ROWNUM SNO
+		FROM EMP)
+	WHERE SNO > (SELECT COUNT(*)-2
+			FROM EMP);
+
+139. WAQTD first and last record of EMP table.
+ANS:
+	SELECT *
+	FROM (SELECT EMP.*,ROWNUM SNO
+		FROM EMP)
+	WHERE SNO = 1 OR SNO = (SELECT COUNT(*)
+				FROM EMP);
+
+140. WAQTD even-numbered records of employees.
+ANS:
+	SELECT *
+	FROM (SELECT EMP.*,ROWNUM SNO 
+		FROM EMP)
+	WHERE MOD(SNO,2) = 0;
+
+142. WAQTD odd-numbered records of employees.
+ANS:
+	SELECT *
+	FROM (SELECT EMP.*,ROWNUM SNO
+		FROM EMP)
+	WHERE MOD(SNO,2) = 1;
+
+143. WAQTD 2nd, 4th and 6th records of employees.
+ANS:
+	SELECT *
+	FROM (SELECT EMP.*,ROWNUM SNO
+		FROM EMP)
+	WHERE SNO IN (2,4,6);
+
+144. WAQTD all records except the first 3 records.
+ANS:
+	SELECT *
+	FROM (SELECT EMP.*,ROWNUM SNO
+		FROM EMP)
+	WHERE SNO NOT IN (1,2,3);
+
+145. WAQTD records from 5th to 10th position.
+ANS:
+	SELECT *
+	FROM (SELECT EMP.*,ROWNUM SNO
+		FROM EMP)
+	WHERE SNO IN (5,6,7,8,9,10);
+
+146. WAQTD the middle record of the EMP table.
+ANS:
+	SELECT *
+	FROM (SELECT EMP.*,ROWNUM SNO 
+		FROM EMP)
+	WHERE SNO = (SELECT COUNT(*)/2
+			FROM EMP);
+
+147. WAQTD first 50% records of EMP table.
+ANS:
+	SELECT *
+	FROM (SELECT EMP.*,ROWNUM SNO
+		FROM EMP)
+	WHERE SNO < (SELECT COUNT(*)/2
+			FROM EMP);
+
+148. WAQTD last 50% records (second half).
+ANS:
+	 SELECT *
+ 	FROM (SELECT EMP.*,ROWNUM SNO
+ 		FROM EMP)
+ 	WHERE SNO >  (SELECT COUNT(*)/2
+ 			FROM EMP);
+
+149.WAQTD first 25% records of employees.
