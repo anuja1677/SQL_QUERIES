@@ -978,4 +978,149 @@ ANS:
 	WHERE SAL > (SELECT AVG(SAL)
 			FROM EMP);
 
- 
+106. WAQTD ENAME and SAL of employees who are earning the minimum salary in each department.
+ANS:
+	SELECT ENAME,SAL
+	FROM EMP
+	WHERE SAL IN (SELECT MIN(SAL)
+			FROM EMP
+			GROUP BY DEPTNO);
+
+107. WAQTD ENAME of employees who are working in the same JOB as ALLEN.
+ANS:
+	SELECT ENAME
+	FROM EMP
+	WHERE JOB = (SELECT JOB 
+			FROM EMP
+			WHERE ENAME = 'ALLEN');
+
+108. WAQTD DNAME of departments that have no employees.
+ANS:
+	SELECT DNAME
+	FROM DEPT
+	WHERE DEPTNO NOT IN (SELECT DEPTNO
+	FROM EMP);
+
+109. WAQTD ENAME of employees who are earning more than at least one SALESMAN.
+ANS:
+	SELECT ENAME
+	FROM EMP
+	WHERE SAL > ANY (SELECT SAL
+			FROM EMP
+			WHERE JOB = 'SALESMAN');
+
+110. WAQTD ENAME of employees who are earning more than all SALESMAN employees.
+ANS:
+	SELECT ENAME
+	FROM EMP
+	WHERE SAL > ALL (SELECT SAL
+			FROM EMP
+			WHERE JOB = 'SALESMAN');
+
+111. WAQTD ENAME and SAL of employees whose salary is greater than the second-highest salary in department 20.
+ANS:
+	SELECT ENAME,SAL
+	FROM EMP
+	WHERE SAL > (SELECT MAX(SAL)
+			FROM EMP
+			WHERE SAL < (SELECT MAX(SAL)
+					FROM EMP
+					WHERE DEPTNO IN 20) AND DEPTNO IN 20);
+
+112. WAQTD employee name and their manager name.
+ANS:
+	SELECT E1.ENAME,E2.ENAME
+	FROM EMP E1 JOIN EMP E2
+	ON E1.MGR = E2.EMPNO;
+
+113. WAQTD employee name, employee salary and manager salary where employee salary is greater than manager salary.
+ANS:
+	
+	SELECT E1.ENAME,E1.SAL,E2.SAL
+	FROM EMP E1 JOIN EMP E2
+	ON E1.MGR = E2.EMPNO
+	WHERE E1.SAL > E2.SAL;
+
+114. WAQTD employee name and manager name where both are working in the same department.
+ANS:
+	SELECT E1.ENAME,E2.ENAME
+	FROM EMP E1 JOIN EMP E2
+	ON E1.MGR = E2.EMPNO
+	WHERE E1.DEPTNO = E2.DEPTNO;
+
+115. WAQTD employee name, manager name and manager's department location.
+ANS:
+	SELECT E1.ENAME ,E2.ENAME , D2.LOC
+	FROM EMP E1 JOIN EMP E2
+	ON E1.MGR = E2.EMPNO INNER JOIN DEPT D2 ON D2.DEPTNO = E2.DEPTNO;
+
+116. WAQTD DNAME and total salary of departments where employees were hired after 1981 and total salary is greater than 4000.
+ANS:
+	SELECT DNAME,SUM(SAL)
+	FROM EMP INNER JOIN DEPT
+	ON EMP.DEPTNO = DEPT.DEPTNO
+	WHERE HIREDATE > '31-DEC-1981'
+	GROUP BY DNAME
+	HAVING SUM(SAL) > 4000;
+
+117. WAQTD employee name and manager name where the manager is working as MANAGER.
+ANS:
+	SELECT E1.ENAME,E2.ENAME
+	FROM EMP E1 JOIN EMP E2
+	ON E1.MGR = E2.EMPNO
+	WHERE E2.JOB = 'MANAGER';
+
+118. WAQTD employee name, employee department name and manager department name.
+ANS:
+	SELECT E1.ENAME,D1.DNAME, D2.DNAME
+ 	FROM EMP E1 JOIN EMP E2
+ 	ON E1.MGR = E2.EMPNO INNER JOIN DEPT D1 ON E1.DEPTNO =D1.DEPTNO INNER JOIN DEPT D2 ON E2.DEPTNO
+
+119. WAQTD employee name, manager name and manager's manager name.
+ANS:
+	SELECT E1.ENAME, E2.ENAME, E3.ENAME
+	FROM EMP E1 JOIN EMP E2 
+	ON E1.MGR = E2.EMPNO 
+	JOIN EMP E3 ON E2.MGR = E3.EMPNO;
+
+120. WAQTD employee name whose manager's manager is working in NEW YORK.
+ANS:
+	SELECT E1.ENAME
+	FROM EMP E1 JOIN EMP E2
+	ON E1.MGR = E2.EMPNO 
+	JOIN EMP E3 ON E2.MGR = E3.EMPNO 
+	INNER JOIN DEPT D3 ON E3.DEPTNO = D3.DEPT
+	WHERE D3.LOC = 'NEW YORK';
+
+121. WAQTD employee name and manager name where the employee and manager have the same hire month.
+ANS:
+	SELECT E1.ENAME,E2.ENAME
+	FROM EMP E1 JOIN EMP E2
+	ON E1.MGR = E2.EMPNO
+	WHERE TO_CHAR(E1.HIREDATE,'MON') = TO_CHAR(E2.HIREDATE,'MON');
+
+122. WAQTD employee name, manager name and manager's manager salary where the manager's manager salary is greater than 2500.
+ANS:
+	SELECT E1.ENAME,E2.ENAME,E3.SAL
+	FROM EMP E1 JOIN EMP E2 ON E1.MGR = E2.EMPNO
+	JOIN EMP E3 ON E2.MGR = E3.EMPNO
+	WHERE E3.SAL > 2500;
+
+123. WAQTD JOB and department name where the average salary of employees is greater than the average salary of CLERKS.
+ANS:
+	SELECT JOB , DNAME
+	FROM EMP INNER JOIN DEPT
+	ON EMP.DEPTNO = DEPT.DEPTNO
+	GROUP BY DNAME,JOB
+	HAVING AVG(SAL) > (SELECT AVG(SAL)
+	FROM EMP
+	WHERE ENAME = 'CLERK');
+
+124. WAQTD department name and number of employees who were hired in the month of December, but display only departments having more than one such employee.
+ANS:
+	SELECT DNAME,COUNT(*)
+	FROM EMP INNER JOIN DEPT
+	ON EMP.DEPTNO = DEPT.DEPTNO
+	WHERE TO_CHAR(HIREDATE,'MON') = 'DEC'
+	GROUP BY DNAME
+	HAVING COUNT(*) > 1;
